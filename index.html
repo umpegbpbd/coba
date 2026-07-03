@@ -324,36 +324,21 @@ function downloadAdminReport(isAuto = false) {
         if(password !== "adminbpbd") { alert("Password Salah!"); return; }
     }
 
-    const data = [["Nama", "NIP", "Waktu Input (WIB)", "Jan JP", "Feb JP", "Mar JP", "Apr JP", "Mei JP", "Jun JP", "Jul JP", "Ags JP", "Sep JP", "Okt JP", "Nov JP", "Des JP", "Jan Sertifikat", "Feb Sertifikat", "Mar Sertifikat", "Apr Sertifikat", "Mei Sertifikat", "Jun Sertifikat", "Jul Sertifikat", "Ags Sertifikat", "Sep Sertifikat", "Okt Sertifikat", "Nov Sertifikat", "Des Sertifikat", "Update SIPKA"]];
+    // Disesuaikan agar mencakup bulan Januari sampai Desember untuk JP dan Sertifikat
+    const data = [["Nama", "NIP", "Waktu Submit", 
+        "Jan JP", "Feb JP", "Mar JP", "Apr JP", "Mei JP", "Jun JP", "Jul JP", "Ags JP", "Sep JP", "Okt JP", "Nov JP", "Des JP",
+        "Jan Sertifikat", "Feb Sertifikat", "Mar Sertifikat", "Apr Sertifikat", "Mei Sertifikat", "Jun Sertifikat", "Jul Sertifikat", "Ags Sertifikat", "Sep Sertifikat", "Okt Sertifikat", "Nov Sertifikat", "Des Sertifikat",
+        "Update SIPKA"]];
+
     window.globalDatabase.forEach(db => {
+        const jp = db.realisasi_jp_bulanan || {};
+        const sert = db.realisasi_sertifikat_bulanan || {};
         data.push([
             db.nama,
             db.nip,
             db.waktu_update,
-            db.realisasi_jp_bulanan.Jan || 0,
-            db.realisasi_jp_bulanan.Feb || 0,
-            db.realisasi_jp_bulanan.Mar || 0,
-            db.realisasi_jp_bulanan.Apr || 0,
-            db.realisasi_jp_bulanan.Mei || 0,
-            db.realisasi_jp_bulanan.Jun || 0,
-            db.realisasi_jp_bulanan.Jul || 0,
-            db.realisasi_jp_bulanan.Ags || 0,
-            db.realisasi_jp_bulanan.Sep || 0,
-            db.realisasi_jp_bulanan.Okt || 0,
-            db.realisasi_jp_bulanan.Nov || 0,
-            db.realisasi_jp_bulanan.Des || 0,
-            db.realisasi_sertifikat_bulanan.Jan || 0,
-            db.realisasi_sertifikat_bulanan.Feb || 0,
-            db.realisasi_sertifikat_bulanan.Mar || 0,
-            db.realisasi_sertifikat_bulanan.Apr || 0,
-            db.realisasi_sertifikat_bulanan.Mei || 0,
-            db.realisasi_sertifikat_bulanan.Jun || 0,
-            db.realisasi_sertifikat_bulanan.Jul || 0,
-            db.realisasi_sertifikat_bulanan.Ags || 0,
-            db.realisasi_sertifikat_bulanan.Sep || 0,
-            db.realisasi_sertifikat_bulanan.Okt || 0,
-            db.realisasi_sertifikat_bulanan.Nov || 0,
-            db.realisasi_sertifikat_bulanan.Des || 0,
+            jp.Jan || 0, jp.Feb || 0, jp.Mar || 0, jp.Apr || 0, jp.Mei || 0, jp.Jun || 0, jp.Jul || 0, jp.Ags || 0, jp.Sep || 0, jp.Okt || 0, jp.Nov || 0, jp.Des || 0,
+            sert.Jan || 0, sert.Feb || 0, sert.Mar || 0, sert.Apr || 0, sert.Mei || 0, sert.Jun || 0, sert.Jul || 0, sert.Ags || 0, sert.Sep || 0, sert.Okt || 0, sert.Nov || 0, sert.Des || 0,
             db.update_sipka || "-"
         ]);
     });
@@ -383,6 +368,7 @@ async function simpanKeGist() {
         keikutsertaan_pertama: document.getElementById('keikutsertaanPertama').value,
         update_sipka: updateSipka.value,
         link_drive_sertifikat: document.getElementById('linkDrive').value,
+        // Disesuaikan agar merekam waktu Indonesia (WIB) pada saat Submit Data
         waktu_update: new Date().toLocaleString('id-ID', { timeZone: 'Asia/Jakarta' }) + ' WIB'
     };
 
