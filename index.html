@@ -149,10 +149,11 @@
 </div>
 
 <script>
-// === SETTING GIST DAN TOKEN BARU ===
+// ==============================================================================
+// GANTI TEKS "MASUKKAN_TOKEN_BARU_ANDA_DISINI" DENGAN TOKEN ANDA YANG BARU
 const GIST_ID = "f72695d4e91c601b699a4772c4ea9";
-const GITHUB_TOKEN = "ghp_" + "nsRdtfiySej4pnSsAbqfIhKeo6tBgv0s0Wnd"; 
-// ===================================
+const GITHUB_TOKEN = "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"; 
+// ==============================================================================
 
 window.globalDatabase = [];
 
@@ -387,14 +388,14 @@ async function simpanKeGist() {
     recordDatabase.total_capaian_sertifikat = document.getElementById('totalSert').innerText;
     recordDatabase.persentase_sertifikat = document.getElementById('persenSert').innerText;
 
-    // === LOGIKA BARU AGAR DATA TIDAK RESET MENJADI 0 ===
+    // === LOGIKA AGAR DATA TIDAK RESET MENJADI 0 KETIKA UPDATE NAMA/JABATAN ===
     const existingIndex = window.globalDatabase.findIndex(d => d.nip === nipPegawai);
     if (existingIndex !== -1) {
-        window.globalDatabase[existingIndex] = recordDatabase; 
+        window.globalDatabase[existingIndex] = recordDatabase; // Update baris lama
     } else {
-        window.globalDatabase.push(recordDatabase); 
+        window.globalDatabase.push(recordDatabase); // Tambah baris baru
     }
-    // ===================================================
+    // =========================================================================
 
     try {
         const response = await fetch(`https://api.github.com/gists/${GIST_ID}`, {
