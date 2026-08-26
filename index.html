@@ -149,8 +149,10 @@
 </div>
 
 <script>
+// === SETTING GIST DAN TOKEN BARU ===
 const GIST_ID = "f72695d4e91c601b699a4772c4ea9";
 const GITHUB_TOKEN = "ghp_" + "nsRdtfiySej4pnSsAbqfIhKeo6tBgv0s0Wnd"; 
+// ===================================
 
 window.globalDatabase = [];
 
@@ -324,7 +326,6 @@ function downloadAdminReport(isAuto = false) {
         if(password !== "adminbpbd") { alert("Password Salah!"); return; }
     }
 
-    // Disesuaikan agar mencakup bulan Januari sampai Desember untuk JP dan Sertifikat
     const data = [["Nama", "NIP", "Waktu Submit", 
         "Jan JP", "Feb JP", "Mar JP", "Apr JP", "Mei JP", "Jun JP", "Jul JP", "Ags JP", "Sep JP", "Okt JP", "Nov JP", "Des JP",
         "Jan Sertifikat", "Feb Sertifikat", "Mar Sertifikat", "Apr Sertifikat", "Mei Sertifikat", "Jun Sertifikat", "Jul Sertifikat", "Ags Sertifikat", "Sep Sertifikat", "Okt Sertifikat", "Nov Sertifikat", "Des Sertifikat",
@@ -368,7 +369,6 @@ async function simpanKeGist() {
         keikutsertaan_pertama: document.getElementById('keikutsertaanPertama').value,
         update_sipka: updateSipka.value,
         link_drive_sertifikat: document.getElementById('linkDrive').value,
-        // Disesuaikan agar merekam waktu Indonesia (WIB) pada saat Submit Data
         waktu_update: new Date().toLocaleString('id-ID', { timeZone: 'Asia/Jakarta' }) + ' WIB'
     };
 
@@ -387,7 +387,14 @@ async function simpanKeGist() {
     recordDatabase.total_capaian_sertifikat = document.getElementById('totalSert').innerText;
     recordDatabase.persentase_sertifikat = document.getElementById('persenSert').innerText;
 
-    window.globalDatabase.push(recordDatabase);
+    // === LOGIKA BARU AGAR DATA TIDAK RESET MENJADI 0 ===
+    const existingIndex = window.globalDatabase.findIndex(d => d.nip === nipPegawai);
+    if (existingIndex !== -1) {
+        window.globalDatabase[existingIndex] = recordDatabase; 
+    } else {
+        window.globalDatabase.push(recordDatabase); 
+    }
+    // ===================================================
 
     try {
         const response = await fetch(`https://api.github.com/gists/${GIST_ID}`, {
